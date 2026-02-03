@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Особое приглашение для тебя</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+            box-shadow: 0 0 6px #fff, 0 0 10px #ff69b4;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px;
+            max-width: 600px;
+        }
+
+        .heart {
+            font-size: 60px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            margin-bottom: 20px;
+            color: #ff1744;
+            text-shadow: 0 0 20px #ff1744, 0 0 40px #ff4569, 0 0 60px #ff1744;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        h1 {
+            color: #ff4081;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px #ff4081, 0 0 20px #ff1744, 0 0 30px #ff4081;
+        }
+
+        .message {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(255, 23, 68, 0.4);
+            box-shadow: 0 0 30px rgba(255, 23, 68, 0.2), inset 0 0 30px rgba(255, 64, 129, 0.1);
+        }
+
+        .message p {
+            color: #fff;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .message .name {
+            color: #ff4081;
+            font-weight: bold;
+            font-size: 1.4rem;
+            text-shadow: 0 0 10px #ff4081;
+        }
+
+        .details {
+            background: linear-gradient(135deg, rgba(255, 23, 68, 0.25), rgba(255, 64, 129, 0.2));
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 1px solid rgba(255, 64, 129, 0.3);
+            box-shadow: 0 0 20px rgba(255, 23, 68, 0.15);
+        }
+
+        .details p {
+            color: #fff;
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .details span {
+            color: #ff5588;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(255, 85, 136, 0.5);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .btn-yes {
+            background: linear-gradient(45deg, #ff1744, #ff4081, #ff6b9d);
+            color: white;
+            box-shadow: 0 5px 25px rgba(255, 23, 68, 0.5), 0 0 40px rgba(255, 64, 129, 0.3);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 35px rgba(255, 23, 68, 0.7), 0 0 50px rgba(255, 64, 129, 0.5);
+        }
+
+        .btn-no {
+            background: transparent;
+            color: #888;
+            border: 2px solid #888;
+            transition: all 0.1s ease;
+        }
+
+        .btn-no.running {
+            position: fixed;
+            z-index: 100;
+        }
+
+        .response {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .response h2 {
+            color: #ff4081;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px #ff4081, 0 0 30px #ff1744;
+        }
+
+        .response p {
+            color: #fff;
+            font-size: 1.2rem;
+        }
+
+        .flowers {
+            font-size: 40px;
+            margin: 20px 0;
+            filter: drop-shadow(0 0 10px #ff1744) drop-shadow(0 0 20px #ff4081);
+        }
+
+        .valentine-badge {
+            background: linear-gradient(45deg, #ff1744, #ff4081, #ff6090);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            display: inline-block;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+            font-weight: bold;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 23, 68, 0.6), 0 0 30px rgba(255, 64, 129, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(255, 23, 68, 0.9), 0 0 50px rgba(255, 64, 129, 0.6); }
+        }
+
+        /* Планшеты */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px 15px;
+                max-width: 100%;
+            }
+
+            h1 { font-size: 2rem; }
+
+            .message {
+                padding: 30px 20px;
+                margin-bottom: 20px;
+            }
+
+            .message p { font-size: 1.1rem; }
+
+            .details {
+                padding: 20px 15px;
+            }
+
+            .details p { font-size: 1rem; }
+
+            .heart { font-size: 50px; }
+        }
+
+        /* Мобильные устройства */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+                padding-top: 20px;
+            }
+
+            .container {
+                padding: 15px 10px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+
+            .heart {
+                font-size: 40px;
+                margin-bottom: 15px;
+            }
+
+            .valentine-badge {
+                padding: 6px 15px;
+                font-size: 0.8rem;
+                margin-bottom: 15px;
+            }
+
+            .message {
+                padding: 20px 15px;
+                border-radius: 15px;
+                margin-bottom: 20px;
+            }
+
+            .message p {
+                font-size: 0.95rem;
+                line-height: 1.6;
+                margin-bottom: 12px;
+            }
+
+            .message .name { font-size: 1.2rem; }
+
+            .details {
+                padding: 15px 12px;
+                margin: 20px 0;
+                border-radius: 12px;
+            }
+
+            .details p {
+                font-size: 0.9rem;
+                margin: 8px 0;
+            }
+
+            .buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .btn {
+                padding: 14px 35px;
+                font-size: 1rem;
+                width: 100%;
+            }
+
+            .response h2 { font-size: 1.5rem; }
+            .response p { font-size: 1rem; }
+            .flowers { font-size: 30px; }
+
+            /* Модальное окно на мобильных */
+            .modal {
+                margin: 15px;
+                padding: 30px 20px;
+                max-width: calc(100% - 30px);
+                border-radius: 20px;
+            }
+
+            .modal h2 { font-size: 1.4rem; }
+            .modal p { font-size: 1rem; }
+            .modal .heart-big { font-size: 40px; }
+            .modal .btn { width: auto; }
+        }
+
+        /* Очень маленькие экраны */
+        @media (max-width: 360px) {
+            h1 { font-size: 1.3rem; }
+            .message p { font-size: 0.9rem; }
+            .details p { font-size: 0.85rem; }
+            .btn { padding: 12px 25px; font-size: 0.9rem; }
+        }
+
+        /* Модальное окно */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: linear-gradient(135deg, #1a1a2e, #302b63);
+            border: 3px solid #ff1744;
+            border-radius: 25px;
+            padding: 50px;
+            text-align: center;
+            max-width: 400px;
+            animation: modalPop 0.4s ease;
+            box-shadow: 0 0 60px rgba(255, 23, 68, 0.6), 0 0 100px rgba(255, 64, 129, 0.4), inset 0 0 30px rgba(255, 23, 68, 0.1);
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal h2 {
+            color: #ff4081;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px #ff4081, 0 0 25px #ff1744;
+        }
+
+        .modal p {
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        .modal .heart-big {
+            font-size: 50px;
+            margin-bottom: 20px;
+            animation: heartbeat 1s infinite;
+            filter: drop-shadow(0 0 15px #ff1744) drop-shadow(0 0 30px #ff4081);
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <!-- Модальное окно -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <div class="heart-big">💕</div>
+            <h2>Отказ не принимается!</h2>
+            <p>У тебя только один вариант — сказать "Да"!</p>
+            <button class="btn btn-yes" onclick="closeModal()">Хорошо, я согласна! 💖</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="invitation">
+            <div class="heart">❤️</div>
+            <div class="valentine-badge">❤️ День Святого Валентина ❤️</div>
+            <h1>Особое приглашение</h1>
+
+            <div class="message">
+                <p>Привет, <span class="name">Айман</span>!</p>
+                <p>Я долго думал, как сказать тебе это, и решил сделать что-то особенное...</p>
+                <p>Ты не представляешь, как я рад каждой нашей встрече. Твоя улыбка делает мой день светлее.</p>
+
+                <div class="details">
+                    <p><span>📅 Когда:</span> 14 февраля, День Святого Валентина</p>
+                    <p><span>📍 Где:</span> Ресторан «Шашликов»</p>
+                    <p><span>✨ Что нас ждёт:</span> Романтический ужин вдвоём</p>
+                </div>
+
+                <p>Согласишься ли ты провести этот особенный вечер со мной?</p>
+            </div>
+
+            <div class="buttons">
+                <button class="btn btn-yes" onclick="sayYes()">Да, с удовольствием!</button>
+                <button class="btn btn-no" id="noBtn">Нет</button>
+            </div>
+        </div>
+
+        <div class="response" id="response">
+            <div class="heart">❤️</div>
+            <h2>Ты сделала меня самым счастливым!</h2>
+            <div class="flowers">🌹 ❤️ 🌹</div>
+            <p>14 февраля станет нашим особенным днём!</p>
+            <p>Жду встречи с тобой в «Шашликов»...</p>
+        </div>
+    </div>
+
+    <script>
+        // Создаём звёзды
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                starsContainer.appendChild(star);
+            }
+        }
+        createStars();
+
+        // Кнопка "Нет" убегает при наведении
+        const noBtn = document.getElementById('noBtn');
+        const modal = document.getElementById('modal');
+        let btnInitialized = false;
+        let hoverCount = 0;
+
+        // Функция для убегания кнопки
+        function runAwayButton() {
+            hoverCount++;
+
+            // После 3 наведений/касаний показываем модальное окно
+            if (hoverCount >= 3) {
+                modal.classList.add('show');
+                noBtn.style.display = 'none';
+                return;
+            }
+
+            // При первом наведении запоминаем позицию и делаем fixed
+            if (!btnInitialized) {
+                const rect = noBtn.getBoundingClientRect();
+                noBtn.classList.add('running');
+                noBtn.style.left = rect.left + 'px';
+                noBtn.style.top = rect.top + 'px';
+                btnInitialized = true;
+            }
+
+            const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+
+            let newX = Math.random() * maxX;
+            let newY = Math.random() * maxY;
+
+            // Убеждаемся, что кнопка не слишком близко к текущей позиции
+            const currentX = parseFloat(noBtn.style.left) || 0;
+            const currentY = parseFloat(noBtn.style.top) || 0;
+
+            while (Math.abs(newX - currentX) < 100 && Math.abs(newY - currentY) < 100) {
+                newX = Math.random() * maxX;
+                newY = Math.random() * maxY;
+            }
+
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
+        }
+
+        // Для компьютера - при наведении мыши
+        noBtn.addEventListener('mouseenter', runAwayButton);
+
+        // Для мобильных - при касании
+        noBtn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            runAwayButton();
+        });
+
+        // Закрыть модальное окно и показать ответ
+        function closeModal() {
+            modal.classList.remove('show');
+            sayYes();
+        }
+
+        // Блокируем клик на кнопку "Нет"
+        noBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // Кнопка "Да"
+        function sayYes() {
+            document.getElementById('invitation').style.display = 'none';
+            document.getElementById('response').style.display = 'block';
+            noBtn.style.display = 'none';
+            createHearts();
+        }
+
+        // Эффект сердечек при согласии
+        function createHearts() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '❤️';
+                    heart.style.position = 'fixed';
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.top = '100vh';
+                    heart.style.fontSize = Math.random() * 20 + 20 + 'px';
+                    heart.style.color = `hsl(${Math.random() * 20 + 340}, 100%, 55%)`;
+                    heart.style.filter = 'drop-shadow(0 0 8px currentColor)';
+                    heart.style.animation = 'floatUp 3s ease-out forwards';
+                    heart.style.zIndex = '1000';
+                    heart.style.pointerEvents = 'none';
+                    document.body.appendChild(heart);
+
+                    setTimeout(() => heart.remove(), 3000);
+                }, i * 100);
+            }
+        }
+
+        // Добавляем анимацию для всплывающих сердец
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes floatUp {
+                to {
+                    transform: translateY(-100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+            .cursor-heart {
+                position: fixed;
+                pointer-events: none;
+                z-index: 9999;
+                font-size: 16px;
+                animation: cursorHeartFade 1s ease-out forwards;
+                filter: drop-shadow(0 0 5px currentColor);
+            }
+            @keyframes cursorHeartFade {
+                0% {
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(0.5) translateY(-30px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Функция создания сердечек
+        function createCursorHearts(x, y, count = 3) {
+            for (let i = 0; i < count; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'cursor-heart';
+                heart.innerHTML = '❤️';
+                const offsetX = (Math.random() - 0.5) * 40;
+                const offsetY = (Math.random() - 0.5) * 40;
+                heart.style.left = (x + offsetX) + 'px';
+                heart.style.top = (y + offsetY) + 'px';
+                heart.style.color = `hsl(${Math.random() * 25 + 340}, 100%, 55%)`;
+                heart.style.fontSize = (12 + Math.random() * 14) + 'px';
+                document.body.appendChild(heart);
+
+                setTimeout(() => heart.remove(), 1000);
+            }
+        }
+
+        // Сердечки за курсором (для компьютера)
+        let lastHeartTime = 0;
+        document.addEventListener('mousemove', function(e) {
+            const now = Date.now();
+            if (now - lastHeartTime < 15) return;
+            lastHeartTime = now;
+            createCursorHearts(e.clientX, e.clientY, 3);
+        });
+
+        // Сердечки при касании (для мобильных)
+        let lastTouchHeartTime = 0;
+
+        document.addEventListener('touchmove', function(e) {
+            const now = Date.now();
+            if (now - lastTouchHeartTime < 25) return;
+            lastTouchHeartTime = now;
+            const touch = e.touches[0];
+            if (touch) {
+                createCursorHearts(touch.clientX, touch.clientY, 3);
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchstart', function(e) {
+            const touch = e.touches[0];
+            if (touch) {
+                createCursorHearts(touch.clientX, touch.clientY, 6);
+            }
+        }, { passive: true });
+    </script>
+</body>
+</html>
