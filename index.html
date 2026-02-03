@@ -516,18 +516,13 @@
             noBtn.style.display = 'none';
             createHearts();
 
-            // Отправляем уведомление на email
-            fetch('https://formsubmit.co/ajax/alirashov998@gmail.com', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    _subject: '💕 Айман согласилась на свидание!',
-                    message: 'Отличные новости! Айман нажала ДА! Она ждёт тебя 14 февраля в ресторане Шашликов! ❤️🎉'
-                })
-            }).catch(() => {});
+            // Отправляем уведомление в Telegram
+            const botToken = '7412267218:AAH41EZ6FyQJGQYJAddPHGJDPyffT3i7Txc';
+            const chatId = '740628340';
+            const message = '💕 Айман согласилась на свидание!%0A%0A✅ Она нажала ДА!%0A📅 14 февраля%0A📍 Ресторан Шашликов%0A%0A❤️ Удачи!';
+
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${message}`)
+                .catch(() => {});
         }
 
         // Эффект сердечек при согласии
