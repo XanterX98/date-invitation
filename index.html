@@ -515,6 +515,12 @@
             document.getElementById('response').style.display = 'block';
             noBtn.style.display = 'none';
             createHearts();
+
+            // Отправляем уведомление в WhatsApp
+            setTimeout(() => {
+                const message = encodeURIComponent('Да, я согласна! 💕 Жду нашу встречу 14 февраля! ❤️');
+                window.open('https://wa.me/77083682168?text=' + message, '_blank');
+            }, 2000);
         }
 
         // Эффект сердечек при согласии
